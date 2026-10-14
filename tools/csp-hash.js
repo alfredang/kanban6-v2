@@ -7,7 +7,8 @@ const crypto = require("crypto");
 
 const file = path.join(__dirname, "..", "index.html");
 let html = fs.readFileSync(file, "utf8");
-const hash = (s) => "sha256-" + crypto.createHash("sha256").update(s, "utf8").digest("base64");
+// Browsers normalise CRLF to LF before hashing, so do the same (Windows checkouts use CRLF).
+const hash = (s) => "sha256-" + crypto.createHash("sha256").update(s.replace(/\r\n?/g, "\n"), "utf8").digest("base64");
 
 const style = html.match(/<style>([\s\S]*?)<\/style>/);
 const script = html.match(/<script>([\s\S]*?)<\/script>/);
